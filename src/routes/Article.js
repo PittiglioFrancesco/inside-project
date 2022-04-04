@@ -13,6 +13,11 @@ const Body = () => {
                 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
                 Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             </p>
+
+            <div className="row justify-content-between me-1 border-top">
+                <h2 className="text-start col-9">Comments</h2>
+                <button className="col-2 btn rounded-pill bg-primary text-white m-2" type="button">View Comments</button>
+            </div>
         </div>
     )
 };
