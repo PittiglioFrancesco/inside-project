@@ -1,24 +1,41 @@
-import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import Body from './Dummy';
+import Articles from './routes/Articles';
+import Article from './routes/Article';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+      <div className="mx-2">
+        <Header />
+      </div>
+
+      <div className='container'>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/">
+              <Body />
+            </Route>
+            <Route exact path="/articles">
+              <Articles />
+            </Route>
+            <Route path="/articles/1">
+              <Article />
+            </Route>
+          </Switch>
+        </BrowserRouter>
+        
+      </div>
+
+      <div className="mx-2">
+        <Footer />
+      </div>
+
     </div>
   );
 }
