@@ -34,7 +34,10 @@ const Articles = () => {
                         </>
                     )}
             </div>
-            <table className="table table-hover my-5">
+
+            <h2 className="text-start mt-5">Tutti gli Articoli</h2>
+
+            <table className="table table-hover mt-2 mb-5">
                 <thead>
                     <tr className="py-5">
                         <th>Data</th>

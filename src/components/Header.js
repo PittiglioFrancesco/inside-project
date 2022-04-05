@@ -3,7 +3,7 @@ import react from 'react';
 const Header = () => {
 
     return(
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light bg-light border-bottom m-0 p-0">
             <div className="container-fluid">
                 <span href="/" className="navbar-brand">realPage</span>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
