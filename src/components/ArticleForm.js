@@ -26,6 +26,7 @@ const ArticleForm = (props) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
+        props.submit();
         console.log('submit');
     };
 
@@ -54,7 +55,7 @@ const ArticleForm = (props) => {
                     (
                         <>
                             <button disabled={!buttonStatus} type="submit" className="btn btn-outline-warning col-1 text-center px-1 me-2">Modifica</button>
-                            <button disabled={!buttonStatus} type="submit" className="btn btn-outline-primary col-1 text-center px-1">Annulla</button>
+                            <button type="button" className="btn btn-outline-primary col-1 text-center px-1" onClick={props.submit}>Annulla</button>
                         </>
                     )}
                 </div>

@@ -29,9 +29,6 @@ function App() {
             <Route exact path="/articles/1">
               <Article />
             </Route>
-            <Route exact path="/articles/1/comments">
-              <Messages />
-            </Route>
             <Route exact path="/articles/1/comments/1">
               <Message />
             </Route>
