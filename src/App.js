@@ -6,6 +6,8 @@ import Header from './components/Header';
 import Body from './Dummy';
 import Articles from './routes/Articles';
 import Article from './routes/Article';
+import Messages from './routes/Messages';
+import Message from './routes/Message';
 
 function App() {
   return (
@@ -24,8 +26,14 @@ function App() {
             <Route exact path="/articles">
               <Articles />
             </Route>
-            <Route path="/articles/1">
+            <Route exact path="/articles/1">
               <Article />
+            </Route>
+            <Route exact path="/articles/1/comments">
+              <Messages />
+            </Route>
+            <Route exact path="/articles/1/comments/1">
+              <Message />
             </Route>
           </Switch>
         </BrowserRouter>
