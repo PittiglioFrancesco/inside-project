@@ -59,9 +59,12 @@ const Articles = () => {
     };
 
     // api
+    const [categories, setCategories] = useState([]);
+
     useEffect(() => {
         getCategories().then((r) => {
-            console.log(r);
+            console.log(r.response.error.data);
+            setCategories(r.response.error.data);
         });
     }, []);
 
@@ -75,7 +78,7 @@ const Articles = () => {
                             <button type="button" className="btn rounded-pill bg-danger text-white ms-1 mt-5 mb-2 p-1" style={style} onClick={setFormFalse}>
                                 Annulla
                             </button>
-                            <ArticleForm action='create' />
+                            <ArticleForm options={categories} action='create' />
                         </>
                     )}
             </div>

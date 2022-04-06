@@ -29,6 +29,11 @@ const ArticleForm = (props) => {
         props.submit();
         console.log('submit');
     };
+    // api
+
+    const optionsList = props.options.map((option) => 
+        <option value={option.id}>{option.name}</option>
+    );
 
     return (
         <div>
@@ -40,9 +45,7 @@ const ArticleForm = (props) => {
                 <div className="mb-3 row">
                     <label htmlFor="category" className="form-label text-start m-0 p-0">Categoria</label>
                     <select id="category" className="form-select w-25" ref={selectRef} onClick={formControl}>
-                        <option value="1">Opzione 1</option>
-                        <option value="2">Opzione 2</option>
-                        <option value="3">Opzione 3</option>
+                        {optionsList}
                     </select>
                 </div>
                 <div className="mb-3 row">
