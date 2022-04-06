@@ -6,7 +6,6 @@ import Header from './components/Header';
 import Body from './Dummy';
 import Articles from './routes/Articles';
 import Article from './routes/Article';
-import Messages from './routes/Messages';
 import Message from './routes/Message';
 
 function App() {

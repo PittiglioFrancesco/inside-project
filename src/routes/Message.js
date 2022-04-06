@@ -1,9 +1,11 @@
 import react, { useRef, useState } from 'react';
+import DeleteModal from '../components/DeleteModal';
 
 const Message = () => {
 
     const [edit, setEdit] = useState(false);
     const [validate, setValidate] = useState(false);
+    const [modalState, setModalState] = useState(false);
 
     const nicknameRef = useRef('');
     const bodyRef = useRef('');
@@ -36,8 +38,22 @@ const Message = () => {
         console.log('edit confirmed');
     };
 
+    const showDeleteModal = () => {
+        setModalState(true);
+    };
+    
+    const hideDeleteModal = () => {
+        setModalState(false);
+    };
+
+    const deleteComment = () => {
+        console.log('delete message')
+        hideDeleteModal();
+    };
+
     return (
         <div>
+            {modalState && <DeleteModal deleteTitle="Vuoi eliminare il messaggio?" deleteMessage="Sei sicuro di voler eliminare il messaggio?" onClose={hideDeleteModal} onClick={deleteComment} />}
             <div className="card mx-5 mt-5" style={style}>
                 <div className="card-body">
                     <input className="form-control text-start card-title" ref={nicknameRef} defaultValue={'Nickname'} readOnly={!edit} onChange={validateHandler} />
@@ -54,7 +70,7 @@ const Message = () => {
             </div>
             <div className="my-2">
                 <button className="btn text-white bg-warning m-2" type="button" onClick={enableEdit}>Modifica</button>
-                <button className="btn text-white bg-danger m-2" type="button">Elimina</button>
+                <button className="btn text-white bg-danger m-2" type="button" onClick={showDeleteModal}>Elimina</button>
             </div>
         </div>
     )
