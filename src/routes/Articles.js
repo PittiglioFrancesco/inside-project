@@ -1,4 +1,5 @@
-import react, { useRef, useState } from 'react';
+import react, { useEffect, useRef, useState } from 'react';
+import { getCategories } from '../api/categories';
 import ArticleForm from '../components/ArticleForm';
 
 
@@ -56,6 +57,13 @@ const Articles = () => {
             setPageNumber(pageNumber - 5);
         }
     };
+
+    // api
+    useEffect(() => {
+        getCategories().then((r) => {
+            console.log(r);
+        });
+    }, []);
 
     return (
         <>
