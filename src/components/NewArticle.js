@@ -1,7 +1,8 @@
 import react, { useRef, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { postArticle, editArticle } from '../api/articles';
 
-const ArticleForm = (props) => {
+const NewArticle = (props) => {
 
     // style
 
@@ -35,9 +36,9 @@ const ArticleForm = (props) => {
             name: titleRef.current.value,
         };
         postArticle(params).then((r) => {
-            console.log(r);
         });
-        console.log('submit');
+        props.closeForm();
+        window.location.reload();
     };
 
     // categories
@@ -46,45 +47,28 @@ const ArticleForm = (props) => {
         <option key={option.id} value={option.id}>{option.name}</option>
     );
 
-    // api put/edit article - needs testing
-    const editHandler = (event) => {
-        event.preventDefault();
-        const params = {
-            idCategory: selectRef.current.value,
-            body: bodyRef.current.value,
-            name: titleRef.current.value,
-        };
-        editArticle(props.articleId, params).then((r) => {
-            console.log(r.error.type);
-        });
-        console.log('submit');
-        props.setModifyFalse();
-        window.location.reload();
-    };
-
     return (
         <div>
             <form onSubmit={submitHandler}>
                 <div className="mb-3 row">
                     <label htmlFor="TitleInput" className="form-label text-start m-0 p-0">Titolo Articolo</label>
-                    <input type="text" className="form-control" id="TitleInput" aria-describedby="titleHelp" defaultValue={props.article.name} ref={titleRef} onChange={formControl} />
+                    <input type="text" className="form-control" id="TitleInput" aria-describedby="titleHelp" ref={titleRef} onChange={formControl} />
                 </div>
                 <div className="mb-3 row">
                     <label htmlFor="category" className="form-label text-start m-0 p-0">Categoria</label>
-                    <select id="category" className="form-select w-25" placeholder="Categoria" ref={selectRef} onClick={formControl}>
+                    <select id="category" className="form-select w-25" ref={selectRef} onClick={formControl}>
                         {optionsList}
                     </select>
                 </div>
                 <div className="mb-3 row">
                     <label htmlFor="body" className="form-label text-start m-0 p-0">Corpo dell'articolo</label>
-                    <textarea type="text" className="form-control" style={textArea} id="body" defaultValue={props.article.body} ref={bodyRef} onChange={formControl} />
+                    <textarea type="text" className="form-control" style={textArea} id="body" ref={bodyRef} onChange={formControl} />
                 </div>
                 <div className="mb-3 row">
                     {props.action === 'create' && <button disabled={!buttonStatus} type="submit" className="btn btn-primary col-1 text-center px-1">Conferma</button>}
                     {props.action === 'edit' && 
                     (
                         <>
-                            <button disabled={!buttonStatus} type="submit" className="btn btn-outline-warning col-1 text-center px-1 me-2" onClick={editHandler}>Modifica</button>
                             <button type="button" className="btn btn-outline-primary col-1 text-center px-1" onClick={props.submit}>Annulla</button>
                         </>
                     )}
@@ -94,4 +78,4 @@ const ArticleForm = (props) => {
     )
 };
 
-export default ArticleForm;
+export default NewArticle;

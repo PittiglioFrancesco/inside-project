@@ -1,7 +1,8 @@
 import react, { useEffect, useRef, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import { getAllArticles } from '../api/articles';
 import { getCategories } from '../api/categories';
-import ArticleForm from '../components/ArticleForm';
-
+import NewArticle from '../components/NewArticle';
 
 const Articles = () => {
 
@@ -21,8 +22,11 @@ const Articles = () => {
         setForm(false);
     }
 
-    const provaRedirect = () => {
-        window.location.href = '/articles/1';
+    const provaRedirect = (articleId) => {
+        console.log('entro');
+        const link = '/articles/' + articleId.toString();
+        window.location.href = link;
+        return <Redirect to={link} />
     };   
 
     // pagination
@@ -58,15 +62,33 @@ const Articles = () => {
         }
     };
 
-    // api
+    // api getCategories
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
-        getCategories().then((r) => {
-            console.log(r.response.error.data);
-            setCategories(r.response.error.data);
+        getCategories(1).then((r) => {
+            setCategories(r.error.data);
         });
     }, []);
+
+    // api getAllArticles - needs testing
+    const [articlesArray, setArticlesArray] = useState([]);
+    useEffect(() => {
+        getAllArticles(pageNumber - 1, 20).then((r) => {
+            if (r.error.status === 404) {
+                console.log('404')
+            }
+            setArticlesArray(r.error.data.content);
+        });
+    }, []);
+
+    const articles = articlesArray.map((article) => 
+    <tr className="py-5" onClick={() => provaRedirect(article.id)} key={article.id}>
+        <td>04/04/2022</td>
+        <td>{article.category.name}</td>
+        <td>{article.name}</td>
+    </tr>
+    );
 
     return (
         <>
@@ -78,7 +100,7 @@ const Articles = () => {
                             <button type="button" className="btn rounded-pill bg-danger text-white ms-1 mt-5 mb-2 p-1" style={style} onClick={setFormFalse}>
                                 Annulla
                             </button>
-                            <ArticleForm options={categories} action='create' />
+                            <NewArticle closeForm={setFormFalse} options={categories} action='create' />
                         </>
                     )}
             </div>
@@ -95,21 +117,12 @@ const Articles = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="py-5" onClick={provaRedirect}>
+                        {/* <tr className="py-5" onClick={provaRedirect}>
                             <td>04/04/2022</td>
                             <td>Dal mondo</td>
                             <td>Guerra in Ucraina</td>
-                        </tr>
-                        <tr className="py-5">
-                            <td>04/04/2022</td>
-                            <td>Salute</td>
-                            <td>COVID-19</td>
-                        </tr>
-                        <tr className="py-5">
-                            <td>04/04/2022</td>
-                            <td>Tecnologia</td>
-                            <td>Nuova scoperta sui Robot</td>
-                        </tr>
+                        </tr> */}
+                        {articles}
                     </tbody>
                 </table>
                 <div className="row justify-content-center">

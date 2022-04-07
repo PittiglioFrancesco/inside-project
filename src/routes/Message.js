@@ -1,4 +1,7 @@
-import react, { useRef, useState } from 'react';
+import react, { useEffect, useRef, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { deleteComment, editComment, getSingleComment } from '../api/comments';
 import DeleteModal from '../components/DeleteModal';
 
 const Message = () => {
@@ -13,8 +16,6 @@ const Message = () => {
     const style = {
         width: '85%',
     };
-
-    const example = 'example';
 
     const enableEdit = () => {
         setEdit(true)
@@ -33,11 +34,6 @@ const Message = () => {
         }
     };
 
-    const confirmEdit = () => {
-        setEdit(false);
-        console.log('edit confirmed');
-    };
-
     const showDeleteModal = () => {
         setModalState(true);
     };
@@ -46,18 +42,53 @@ const Message = () => {
         setModalState(false);
     };
 
-    const deleteComment = () => {
+    // api getComment
+    // api getArticle - needs testing
+    const [body, setBody] = useState('');
+    const [nickname, setNickname] = useState('');
+    const { articleId, commentId } = useParams();
+
+    useEffect(() => {
+        getSingleComment(articleId, commentId).then((r) => {
+            if (r.error.data === undefined) {
+                console.log('404');
+                window.location.href = "/error";
+            };
+            setBody(r.error.data.body);
+            setNickname(r.error.data.nickname);
+        });
+    }, []);
+
+    // api edit comment
+    const confirmEdit = () => {
+        setEdit(false);
+        console.log('edit confirmed');
+        const params = {
+            body: bodyRef.current.value,
+            nickname: nicknameRef.current.value,
+        };
+        editComment(articleId, commentId, params).then((r) => {
+            console.log(r);
+        });
+    };
+
+    // api delete comment
+    const deleteMessage = () => {
         console.log('delete message')
         hideDeleteModal();
+        deleteComment(articleId, commentId).then((r) => {
+            console.log(r);
+        });
+        window.location.href = "/articles/" + articleId;
     };
 
     return (
         <div>
-            {modalState && <DeleteModal deleteTitle="Vuoi eliminare il messaggio?" deleteMessage="Sei sicuro di voler eliminare il messaggio?" onClose={hideDeleteModal} onClick={deleteComment} />}
+            {modalState && <DeleteModal deleteTitle="Vuoi eliminare il messaggio?" deleteMessage="Sei sicuro di voler eliminare il messaggio?" onClose={hideDeleteModal} onClick={deleteMessage} />}
             <div className="card mx-5 mt-5" style={style}>
                 <div className="card-body">
-                    <input className="form-control text-start card-title" ref={nicknameRef} defaultValue={'Nickname'} readOnly={!edit} onChange={validateHandler} />
-                    <input className="form-control text-start card-text" ref={bodyRef} defaultValue={example} readOnly={!edit} onChange={validateHandler} />
+                    <input className="form-control text-start card-title" ref={nicknameRef} defaultValue={nickname} readOnly={!edit} onChange={validateHandler} />
+                    <input className="form-control text-start card-text" ref={bodyRef} defaultValue={body} readOnly={!edit} onChange={validateHandler} />
                     <h6 className="text-start card-subtitle my-2 text-muted">05/05/2022</h6>
                     {edit && 
                     (

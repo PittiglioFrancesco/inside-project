@@ -1,8 +1,13 @@
-import react, { useState, useRef } from 'react';
+import react, { useState, useRef, useEffect } from 'react';
 import MessageForm from '../components/MessageForm'
 import ArticleForm from '../components/ArticleForm';
 import Messages from './Messages';
 import DeleteModal from '../components/DeleteModal';
+import { getArticle } from '../api/articles';
+import { getCategories } from '../api/categories';
+import { useParams } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import ErrorPage from '../components/ErrorPage';
 
 const Body = () => {
 
@@ -18,17 +23,25 @@ const Body = () => {
         setShowMessageForm(false);
     };
 
+    // api get article to set up edit - need testing
     const enableChanges = () => {
         setModify(true);
+        getArticle(articleId).then((r) => {
+            // here you save the article inside a state that you will pass trough props to ArticleForm
+        });
     };
 
     const disableChanges = () => {
         setModify(false);
     };
 
+    // needs fix - loop
     const deleteArticle = () => {
-        console.log('deleted');
-        hideDeleteModal();
+        // console.log('deleted');
+        deleteArticle(articleId).then((r) => {
+            console.log(r);
+        });
+        window.location.href = "/articles";
     }
 
     const showDeleteModal = () => {
@@ -72,20 +85,44 @@ const Body = () => {
         }
     };
 
+    // api categories
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        getCategories(1).then((r) => {
+            setCategories(r.error.data);
+        });
+    }, []);
+
+    // api getArticle - needs testing
+    const [article, setArticle] = useState({});
+    const [category, setCategory] = useState({});
+    const { articleId } = useParams();
+
+    useEffect(() => {
+        getArticle(articleId).then((r) => {
+            if (r.error.data === undefined) {
+                window.location.href = "/error";
+            };
+            setArticle(r.error.data);
+            setCategory(r.error.data.category);
+        });
+    }, []);
+
     return (
         <div>
             {modalState && <DeleteModal deleteTitle="Vuoi eliminare l'Articolo?" deleteMessage="Sei sicuro di voler eliminare l'articolo? Verranno eliminati anche tutti i commenti dell'articolo." onClose={hideDeleteModal} onClick={deleteArticle} />}
             {!modify && (
                 <>
-                    <h1 className="text-start mt-5 mb-1">La guerra in Ucraina</h1>
 
-                    <p className="text-start">Pubblicato il 4 Aprile 2022</p>
+                    <span className="mt-5 text-start bg-primary text-white p-3 rounded-pill">{category.name}</span>
+
+                    <h1 className="text-start mt-5 mb-1">{article.name}</h1>
+
+                    {/* <p className="text-start">Pubblicato il 4 Aprile 2022</p> */}
 
                     <p className="mt-5 py-5 px-3 text-start border">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        {article.body}
                     </p>
 
                     <div className="mb-5">
@@ -99,7 +136,7 @@ const Body = () => {
             (
                 <div className="my-5">
                     <h2 className="mb-4">Modifica Articolo</h2>
-                    <ArticleForm submit={disableChanges} action='edit' />
+                    <ArticleForm setModifyFalse={disableChanges} articleId={articleId} categoryId={category} article={article} options={categories} submit={disableChanges} action='edit' />
                 </div>           
             )}
 
@@ -123,13 +160,13 @@ const Body = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-caret-down-fill col-1" viewBox="0 0 16 16" onClick={setMessageFormFalseHandler}>
                         <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
                     </svg>
-                    <MessageForm />
+                    <MessageForm setMessageFormFalseHandler={setMessageFormFalseHandler} />
                     </>
                     )}
             </div>
 
             <div className="row justify-content-between me-1">
-                <Messages />
+                <Messages articleId={articleId} pageNumber={pageNumber} />
             </div>
             <div className="row justify-content-center">
                     <button type="button" className="btn border col-1" onClick={buttonPageMinus5}>{'<<'}</button>

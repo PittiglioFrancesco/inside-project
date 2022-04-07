@@ -7,6 +7,7 @@ import Body from './Dummy';
 import Articles from './routes/Articles';
 import Article from './routes/Article';
 import Message from './routes/Message';
+import ErrorPage from './components/ErrorPage';
 
 function App() {
   return (
@@ -25,12 +26,15 @@ function App() {
             <Route exact path="/articles">
               <Articles />
             </Route>
-            <Route exact path="/articles/1">
+            <Route exact path="/articles/:articleId">
               <Article />
             </Route>
-            <Route exact path="/articles/1/comments/1">
+            <Route exact path="/articles/:articleId/comments/:commentId">
               <Message />
             </Route>
+            <Route path="/error">
+              <ErrorPage errorNumber={'404'} errorMessage={'Page not found'} />
+            </Route> 
           </Switch>
         </BrowserRouter>
         
